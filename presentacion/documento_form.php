@@ -30,8 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $archivoUrl = $_POST['archivo_url'] ?? '';
 
     // Solo los administradores pueden asignarse a si mismos como admin_carga.
-    // Para un paciente logueado no tendria sentido dar de alta un documento,
-    // pero dejamos la validacion de rol aca por si se usa mas adelante.
+    // Para un paciente logueado no tendria sentido dar de alta un documento, pero dejamos la validacion de rol aca por si se usa mas adelante.
     $idAdminCarga = $usuario['rol'] === 'administrador' ? (int) $usuario['identificador'] : null;
 
     $documento = new Documento($id, $titulo, $archivoUrl);
