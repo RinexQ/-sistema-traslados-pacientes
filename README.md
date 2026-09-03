@@ -1,11 +1,10 @@
 # Sistema de Traslados de Pacientes — Módulo Documentación
 
-Segunda entrega. Backend en PHP + MySQL sobre el prototipo de frontend
-existente (dashboard "MediCare" en HTML/Bootstrap).
+Segunda entrega. Backend en PHP + MySQL.
 
 ## Estado de esta entrega
 
-- [x] Base de datos corregida (ver DER actualizado) y creada con DDL completo
+- [x] Base de datos corregida y creada con DDL completo
 - [x] Login con sesiones ($_SESSION), dos roles: administrador y paciente
 - [x] Logout que destruye la sesión
 - [x] Rutas protegidas: redirigen a /login.php si no hay sesión activa
@@ -13,7 +12,7 @@ existente (dashboard "MediCare" en HTML/Bootstrap).
 - [x] Vista pública accesible por QR (ver_documento.php)
 - [x] Arquitectura en 3 capas (presentacion / negocio / datos)
 - [x] 2 clases de dominio con atributos y métodos: `Usuario`, `Documento`
-- [ ] Módulo Ambulancias (opcional, no incluido en esta entrega)
+- [ ] Módulo Ambulancias (opcional, no incluido)
 
 ## Estructura de carpetas
 
@@ -31,11 +30,11 @@ existente (dashboard "MediCare" en HTML/Bootstrap).
 │   ├── UsuarioDAO.php
 │   └── DocumentoDAO.php
 └── presentacion/            capa de PRESENTACIÓN
-    ├── index.html           prototipo original, SIN modificar
-    ├── styles.css           prototipo original, SIN modificar
+    ├── index.html           prototipo original
+    ├── styles.css           prototipo original
     ├── panel.php            sirve index.html solo si hay sesión activa
     ├── documentos_listar.php
-    ├── documento_form.php   alta y edición (mismo formulario)
+    ├── documento_form.php   alta y edición
     └── documento_eliminar.php
 ```
 
@@ -43,8 +42,8 @@ existente (dashboard "MediCare" en HTML/Bootstrap).
 
 1. Copiar toda esta carpeta dentro de `htdocs` de XAMPP, por ejemplo
    `htdocs/traslados` (con Apache y MySQL corriendo).
-2. En phpMyAdmin, importar en este orden:
-   - `traslados_pacientes_v2.sql` (crea la base y las tablas)
+2. En phpMyAdmin, importar en este orden (en caso de tener los archivos correspondientes para la importación):
+   - `traslados_pacientes.sql` (crea la base y las tablas)
    - `agregar_login.sql` (agrega las contraseñas y el usuario de prueba)
 3. Revisar `datos/Conexion.php` si tu MySQL no usa usuario `root` sin
    contraseña (configuración por defecto de XAMPP).
