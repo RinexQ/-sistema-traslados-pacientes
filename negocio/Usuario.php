@@ -1,7 +1,6 @@
 <?php
 // Capa de NEGOCIO
-// Representa a la persona que inicia sesion (administrativo o paciente)
-// y contiene la logica para validar sus credenciales.
+// Representa a la persona que inicia sesion (administrativo o paciente y contiene la logica para validar sus credenciales.
 
 require_once __DIR__ . '/../datos/UsuarioDAO.php';
 
