@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Panel Administrativo</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- Sidebar (PC) -->
+
+        <aside class="col-lg-2 bg-primary text-white min-vh-100 p-3 d-none d-lg-block">
+
+            <h3 class="text-center mb-4">
+
+                <i class="bi bi-hospital"></i>
+
+                MediCare
+
+            </h3>
+
+            <hr>
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item">
+
+                    <a class="nav-link text-white active" href="#">
+
+                        <i class="bi bi-speedometer2"></i>
+
+                        Dashboard
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link text-white" href="#">
+
+                        <i class="bi bi-truck"></i>
+
+                        Ambulancias
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link text-white" href="#">
+
+                        <i class="bi bi-file-earmark-text"></i>
+
+                        Documentación
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link text-white" href="#">
+
+                        <i class="bi bi-person-badge"></i>
+
+                        Usuarios
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link text-white" href="#">
+
+                        <i class="bi bi-gear"></i>
+
+                        Configuración
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </aside>
+
+        <!-- Contenido -->
+
+        <main class="col-12 col-lg-10 p-4">
+
+            <!-- Menú para celular -->
+
+            <div class="d-lg-none mb-3">
+
+                <div class="row g-2">
+
+                    <div class="col-6">
+                        <button class="btn btn-primary w-100">
+                            Dashboard
+                        </button>
+                    </div>
+
+                    <div class="col-6">
+                        <button class="btn btn-primary w-100">
+                            Ambulancias
+                        </button>
+                    </div>
+
+                    <div class="col-6">
+                        <button class="btn btn-primary w-100">
+                            Documentación
+                        </button>
+                    </div>
+
+                    <div class="col-6">
+                        <button class="btn btn-primary w-100">
+                            Usuarios
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            
+
+            <nav class="navbar bg-white rounded shadow-sm px-4 py-3">
+
+                <div class="container-fluid">
+
+                    <div class="row w-100 align-items-center">
+
+                        <div class="col-12 col-md-6 mb-3 mb-md-0">
+
+                            <input
+                            class="form-control"
+                            type="search"
+                            placeholder="Buscar...">
+
+                        </div>
+
+                        <div class="col-12 col-md-6 text-center text-md-end">
+
+                            <i class="bi bi-bell fs-4 me-3"></i>
+
+                            <i class="bi bi-envelope fs-4 me-3"></i>
+
+                            <i class="bi bi-person-circle fs-2"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </nav>
+
+            <!-- Encabezado -->
+
+            <div class="mt-4">
+
+                <h2>Dashboard</h2>
+
+                <p class="text-muted">
+
+                    Bienvenido al panel administrativo.
+
+                </p>
+
+                <div class="alert alert-primary rounded-4">
+
+                    <i class="bi bi-info-circle-fill"></i>
+
+                    Desde este panel podrás gestionar ambulancias,
+                    documentación y usuarios.
+
+                </div>
+
+            </div>
+
+            <!-- Tarjetas -->
+
+            <div class="row g-4">
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between">
+
+                                <div>
+
+                                    <h6>Ambulancias</h6>
+
+                                    <h2>12</h2>
+
+                                </div>
+
+                                <i class="bi bi-truck text-success fs-1"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between">
+
+                                <div>
+
+                                    <h6>Documentos</h6>
+
+                                    <h2>542</h2>
+
+                                </div>
+
+                                <i class="bi bi-file-earmark-text text-warning fs-1"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between">
+
+                                <div>
+
+                                    <h6>Turnos Hoy</h6>
+
+                                    <h2>84</h2>
+
+                                </div>
+
+                                <i class="bi bi-calendar-check text-danger fs-1"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+                        <!-- Tabla y actividad -->
+
+            <div class="row mt-4">
+
+                <!-- Tabla -->
+
+                <div class="col-12 col-xl-8 mb-4">
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-header bg-white">
+
+                            <h5 class="mb-0">
+                                Pacientes recientes
+                            </h5>
+
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle mb-0">
+
+                                <thead class="table-light">
+
+                                    <tr>
+
+                                        <th>Paciente</th>
+                                        <th>Estado</th>
+                                        <th>Fecha</th>
+                                        <th>Acción</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+
+                                        <td>Juan Pérez</td>
+
+                                        <td>
+                                            <span class="badge bg-success">
+                                                Activo
+                                            </span>
+                                        </td>
+
+                                        <td>30/07/2026</td>
+
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">
+                                                Ver
+                                            </button>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td>María Gómez</td>
+
+                                        <td>
+                                            <span class="badge bg-warning text-dark">
+                                                Pendiente
+                                            </span>
+                                        </td>
+
+                                        <td>29/07/2026</td>
+
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">
+                                                Ver
+                                            </button>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td>Carlos Silva</td>
+
+                                        <td>
+                                            <span class="badge bg-danger">
+                                                Urgente
+                                            </span>
+                                        </td>
+
+                                        <td>28/07/2026</td>
+
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">
+                                                Ver
+                                            </button>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td>Lucía Fernández</td>
+
+                                        <td>
+                                            <span class="badge bg-success">
+                                                Activo
+                                            </span>
+                                        </td>
+
+                                        <td>27/07/2026</td>
+
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">
+                                                Ver
+                                            </button>
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Actividad reciente -->
+
+                <div class="col-12 col-xl-4">
+
+                    <div class="card shadow-sm mb-4">
+
+                        <div class="card-header bg-white">
+
+                            <h5 class="mb-0">
+
+                                Actividad reciente
+
+                            </h5>
+
+                        </div>
+
+                        <div class="list-group list-group-flush">
+
+                            <div class="list-group-item">
+
+                                <i class="bi bi-person-plus-fill text-success me-2"></i>
+
+                                Nuevo paciente registrado
+
+                            </div>
+
+                            <div class="list-group-item">
+
+                                <i class="bi bi-truck text-primary me-2"></i>
+
+                                Ambulancia asignada
+
+                            </div>
+
+                            <div class="list-group-item">
+
+                                <i class="bi bi-file-earmark-check text-warning me-2"></i>
+
+                                Documento actualizado
+
+                            </div>
+
+                            <div class="list-group-item">
+
+                                <i class="bi bi-calendar-check text-danger me-2"></i>
+
+                                Turno confirmado
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Accesos rápidos -->
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-header bg-white">
+
+                            <h5 class="mb-0">
+
+                                Accesos rápidos
+
+                            </h5>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="d-grid gap-2 w-100">
+
+                                <button class="btn btn-primary">
+                                    Nueva ambulancia
+                                </button>
+
+                                <button class="btn btn-success">
+                                    Nuevo documento
+                                </button>
+
+                                <button class="btn btn-warning text-dark">
+                                    Nuevo usuario
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
