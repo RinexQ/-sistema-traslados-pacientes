@@ -1,7 +1,6 @@
 <?php
 // Capa de NEGOCIO
 // Funciones para iniciar sesion, verificarla y cerrarla.
-// Cualquier pagina protegida llama a Auth::exigirSesion() al principio.
 
 class Auth {
 
