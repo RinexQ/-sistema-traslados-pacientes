@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="card shadow-sm" style="max-width: 380px; width: 100%;">
             <div class="card-body p-4">
                 <h3 class="text-center mb-4">
-                    <i class="bi bi-hospital"></i> MediCare
+                    <i class="bi bi-hospital"></i> Hospital de Clinicas
                 </h3>
 
                 <?php if ($error !== ''): ?>
