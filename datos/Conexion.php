@@ -1,7 +1,6 @@
 <?php
 // Capa de DATOS
 // Clase encargada exclusivamente de abrir la conexión a MySQL.
-// Ninguna otra clase debe usar mysqli/PDO directo: siempre pasan por aca.
 
 class Conexion {
 
@@ -12,7 +11,7 @@ class Conexion {
 
     private static $pdo = null;
 
-    // Devuelve siempre la misma instancia de PDO (patron singleton simple)
+   
     public static function obtener(): PDO {
         if (self::$pdo === null) {
             $dsn = 'mysql:host=' . self::$host . ';dbname=' . self::$dbname . ';charset=utf8mb4';
