@@ -1,7 +1,6 @@
 <?php
 // Capa de NEGOCIO
-// Representa un documento del sistema y valida sus datos antes
-// de que la capa de Datos los guarde.
+// Representa un documento del sistema y valida sus datos antes de que la capa de Datos los guarde.
 
 class Documento {
 
@@ -20,7 +19,7 @@ class Documento {
     }
 
     // Valida los datos del documento. Devuelve un array de errores
-    // (vacio si todo esta bien). Esto es lo que muestra el formulario.
+    // Si todo está bien no debería mostrar nada. Esto es lo que muestra el formulario.
     public function validar(): array {
         $errores = [];
 
