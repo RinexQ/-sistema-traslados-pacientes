@@ -39,7 +39,7 @@ sql/                    scripts DDL y DML
 
 ## Usuarios de prueba
 
-- Administrador: `admin@medicare.com` / `admin123`
+- Administrador: `admin@sirius.com` / `admin123`
 - Paciente: `maria.gonzalez@gmail.com` / `paciente123`
 
 El paciente solo ve el listado de documentos (sin editar ni borrar).
