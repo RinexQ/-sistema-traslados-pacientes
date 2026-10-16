@@ -1,66 +1,45 @@
-# Sistema de Traslados de Pacientes — Módulo Documentación
+# Sistema de Traslados de Pacientes (S.I.G.S.M.) - Grupo Sirius
 
-Segunda entrega. Backend en PHP + MySQL sobre el prototipo de frontend
-existente (dashboard "MediCare" en HTML/Bootstrap).
+Segunda entrega. Backend en PHP + MySQL con arquitectura en 3 capas.
 
-## Estado de esta entrega
+## Estado de la entrega
 
-- [x] Base de datos corregida (ver DER actualizado) y creada con DDL completo
-- [x] Login con sesiones ($_SESSION), dos roles: administrador y paciente
-- [x] Logout que destruye la sesión
-- [x] Rutas protegidas: redirigen a /login.php si no hay sesión activa
-- [x] CRUD completo de Documentación (alta, listado, edición, baja física)
-- [x] Vista pública accesible por QR (ver_documento.php)
-- [x] Arquitectura en 3 capas (presentacion / negocio / datos)
-- [x] 2 clases de dominio con atributos y métodos: `Usuario`, `Documento`
-- [ ] Módulo Ambulancias (opcional, no incluido en esta entrega)
+- Base de datos corregida (DER y esquema), DDL completo y datos de prueba
+- Conexion con PDO y consultas SELECT mostradas en el dashboard
+- Login con sesiones y dos roles (administrador y paciente), logout, rutas protegidas
+- Validaciones en JavaScript en login y en el formulario de documentos
+- CRUD de Documentacion (alta, listado con busqueda, edicion, baja)
+- Vista publica por QR (`ver_documento.php?codigo=...`)
+- Dashboard, Ambulancias (vehiculos y traslados) y Usuarios con datos reales
+- Modulo Ambulancias: solo lectura (opcional en la consigna)
 
-## Estructura de carpetas
+## Estructura
 
 ```
-/
-├── login.php              controlador de login
-├── logout.php             destruye la sesión
-├── ver_documento.php       vista pública que abre el QR (sin sesión)
-├── negocio/                capa de NEGOCIO (lógica, validaciones, dominio)
-│   ├── Usuario.php
-│   ├── Documento.php
-│   └── Auth.php
-├── datos/                  capa de DATOS (acceso a la base)
-│   ├── Conexion.php
-│   ├── UsuarioDAO.php
-│   └── DocumentoDAO.php
-└── presentacion/            capa de PRESENTACIÓN
-    ├── index.html           prototipo original, SIN modificar
-    ├── styles.css           prototipo original, SIN modificar
-    ├── panel.php            sirve index.html solo si hay sesión activa
-    ├── documentos_listar.php
-    ├── documento_form.php   alta y edición (mismo formulario)
-    └── documento_eliminar.php
+config.php              nombre del sistema
+index.php               redirige al dashboard o al login
+login.php / logout.php  autenticacion
+ver_documento.php       vista publica del QR
+negocio/                Usuario, Documento, Auth
+datos/                  Conexion, UsuarioDAO, DocumentoDAO, PanelDAO
+presentacion/           paginas, layout, styles.css, js/validaciones.js
+sql/                    scripts DDL y DML
 ```
 
-## Instalación (XAMPP)
+## Instalacion (XAMPP)
 
-1. Copiar toda esta carpeta dentro de `htdocs` de XAMPP, por ejemplo
-   `htdocs/traslados` (con Apache y MySQL corriendo).
-2. En phpMyAdmin, importar en este orden:
-   - `traslados_pacientes_v2.sql` (crea la base y las tablas)
-   - `agregar_login.sql` (agrega las contraseñas y el usuario de prueba)
-3. Revisar `datos/Conexion.php` si tu MySQL no usa usuario `root` sin
-   contraseña (configuración por defecto de XAMPP).
-4. Abrir en el navegador: `http://localhost/traslados/login.php`
+1. Copiar la carpeta dentro de `C:\xampp\htdocs\` (ej: `htdocs\modulo_documentacion`).
+2. Iniciar Apache y MySQL desde el panel de XAMPP.
+3. En phpMyAdmin importar, en este orden:
+   1. `sql/traslados_pacientes_v2.sql`
+   2. `sql/agregar_login.sql`
+   3. `sql/datos_prueba_ampliado.sql` (o `sql/datos_prueba.sql`, usar solo uno de los dos)
+4. Si MySQL tiene otra clave, ajustar `datos/Conexion.php`.
+5. Abrir `http://localhost/modulo_documentacion/login.php`
 
-## Usuario de prueba
+## Usuarios de prueba
 
-- Email: `admin@medicare.com`
-- Contraseña: `admin123`
+- Administrador: `admin@medicare.com` / `admin123`
+- Paciente: `maria.gonzalez@gmail.com` / `paciente123`
 
-## Notas de diseño
-
-- `index.html` y `styles.css` no se tocaron. La ruta protegida real del
-  dashboard es `presentacion/panel.php`, que valida la sesión y después
-  sirve el HTML original tal cual.
-- El campo `password_hash` se agregó a `administrativo` y `paciente`
-  porque el modelo original no tenía forma de autenticar usuarios.
-- El alta de documentos solo la puede hacer un administrador (se valida
-  el rol de la sesión antes del INSERT).
+El paciente solo ve el listado de documentos (sin editar ni borrar).
