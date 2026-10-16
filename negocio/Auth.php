@@ -1,8 +1,4 @@
 <?php
-// Capa de NEGOCIO
-// Funciones para iniciar sesion, verificarla y cerrarla.
-// Cualquier pagina protegida llama a Auth::exigirSesion() al principio.
-
 class Auth {
 
     public static function iniciar(): void {
@@ -11,8 +7,22 @@ class Auth {
         }
     }
 
+    public static function base(): string {
+        $raiz = str_replace('\\', '/', (string) realpath(__DIR__ . '/..'));
+        $doc  = str_replace('\\', '/', (string) realpath($_SERVER['DOCUMENT_ROOT'] ?? ''));
+        if ($doc !== '' && stripos($raiz, $doc) === 0) {
+            return rtrim(substr($raiz, strlen($doc)), '/');
+        }
+        return '';
+    }
+
+    public static function url(string $ruta): string {
+        return self::base() . '/' . ltrim($ruta, '/');
+    }
+
     public static function guardarUsuario(Usuario $usuario): void {
         self::iniciar();
+        session_regenerate_id(true);
         $_SESSION['usuario'] = [
             'identificador' => $usuario->identificador,
             'nombre'        => $usuario->nombre,
@@ -36,27 +46,29 @@ class Auth {
         return $u !== null && $u['rol'] === 'administrador';
     }
 
-    // Corta la ejecucion y redirige al login si no hay sesion activa.
     public static function exigirSesion(): void {
         self::iniciar();
         if (!self::haySesion()) {
-            header('Location: /login.php');
+            header('Location: ' . self::url('login.php'));
             exit;
         }
     }
 
-    // Ademas de exigir sesion, exige que el rol sea administrador.
     public static function exigirAdministrador(): void {
         self::exigirSesion();
         if (!self::esAdministrador()) {
-            http_response_code(403);
-            die('No tenes permiso para acceder a esta seccion.');
+            header('Location: ' . self::url('presentacion/documentos_listar.php'));
+            exit;
         }
     }
 
     public static function cerrarSesion(): void {
         self::iniciar();
         $_SESSION = [];
+        if (ini_get('session.use_cookies')) {
+            $p = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+        }
         session_destroy();
     }
 }

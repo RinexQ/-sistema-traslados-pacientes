@@ -1,8 +1,4 @@
 <?php
-// Capa de NEGOCIO
-// Representa un documento del sistema y valida sus datos antes
-// de que la capa de Datos los guarde.
-
 class Documento {
 
     public ?int $id;
@@ -19,8 +15,6 @@ class Documento {
         $this->idAdminCarga = $idAdminCarga;
     }
 
-    // Valida los datos del documento. Devuelve un array de errores
-    // (vacio si todo esta bien). Esto es lo que muestra el formulario.
     public function validar(): array {
         $errores = [];
 
@@ -34,6 +28,8 @@ class Documento {
             $errores[] = 'Debes indicar la URL o ruta del archivo.';
         } elseif (mb_strlen($this->archivoUrl) > 500) {
             $errores[] = 'La URL del archivo es demasiado larga.';
+        } elseif (!preg_match('#^(https?://|documentos/)\S+$#i', $this->archivoUrl)) {
+            $errores[] = 'La ruta debe comenzar con http://, https:// o documentos/ y no tener espacios.';
         }
 
         return $errores;
