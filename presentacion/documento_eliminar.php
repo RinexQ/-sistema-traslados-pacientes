@@ -1,17 +1,26 @@
 <?php
-// La confirmacion del usuario ya se pide en el listado (confirm() de JS).
-// Este archivo solo ejecuta el DELETE si llega un id valido.
 require_once __DIR__ . '/../negocio/Auth.php';
 require_once __DIR__ . '/../datos/DocumentoDAO.php';
 
-Auth::exigirSesion();
+Auth::exigirAdministrador();
 
-$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
-
-if ($id !== null) {
-    $dao = new DocumentoDAO();
-    $dao->eliminar($id);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: documentos_listar.php');
+    exit;
 }
 
-header('Location: documentos_listar.php?msg=eliminado');
+$id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+$resultado = 'error';
+
+if ($id > 0) {
+    try {
+        $dao = new DocumentoDAO();
+        $dao->eliminar($id);
+        $resultado = 'eliminado';
+    } catch (PDOException $ex) {
+        $resultado = 'error';
+    }
+}
+
+header('Location: documentos_listar.php?msg=' . $resultado);
 exit;

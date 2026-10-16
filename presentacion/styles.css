@@ -275,3 +275,12 @@ h5{
     }
 
 }
+
+.card .btn i,
+.card-header i{
+    font-size:1rem;
+}
+
+.btn-outline-secondary i{
+    font-size:1rem;
+}
