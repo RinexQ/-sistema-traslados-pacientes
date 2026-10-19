@@ -23,7 +23,7 @@ require __DIR__ . '/layout_inicio.php';
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
-                            <tr><th>ID</th><th>Nombre</th><th>Email</th></tr>
+                            <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th></tr>
                         </thead>
                         <tbody>
                         <?php foreach ($administrativos as $a): ?>
@@ -31,6 +31,7 @@ require __DIR__ . '/layout_inicio.php';
                                 <td><?= (int) $a['id_admin'] ?></td>
                                 <td><?= e($a['nombre']) ?></td>
                                 <td><?= e($a['email']) ?></td>
+                                <td><?= e($nombresRol[$a['rol']] ?? $a['rol']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>

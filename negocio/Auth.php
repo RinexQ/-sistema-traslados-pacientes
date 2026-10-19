@@ -48,8 +48,30 @@ class Auth {
 
     public static function exigirSesion(): void {
         self::iniciar();
+
+        // Cerrar sesion: cualquier pagina protegida con ?salir=1
+        if (isset($_GET['salir'])) {
+            self::cerrarSesion();
+            header('Location: ' . self::url('login.php'));
+            exit;
+        }
+
         if (!self::haySesion()) {
             header('Location: ' . self::url('login.php'));
+            exit;
+        }
+    }
+
+    // Personal del hospital: administrador, medico o enfermeria (todos menos paciente)
+    public static function esPersonal(): bool {
+        $u = self::usuarioActual();
+        return $u !== null && $u['rol'] !== 'paciente';
+    }
+
+    public static function exigirPersonal(): void {
+        self::exigirSesion();
+        if (!self::esPersonal()) {
+            header('Location: ' . self::url('presentacion/documentos_listar.php'));
             exit;
         }
     }

@@ -21,7 +21,7 @@ class UsuarioDAO {
 
     public function listarAdministrativos(): array {
         return Conexion::obtener()
-            ->query('SELECT id_admin, nombre, email FROM administrativo ORDER BY id_admin')
+            ->query('SELECT id_admin, nombre, email, rol FROM administrativo ORDER BY id_admin')
             ->fetchAll();
     }
 

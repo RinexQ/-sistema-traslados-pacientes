@@ -6,7 +6,10 @@ Auth::exigirSesion();
 
 $busqueda = trim($_GET['q'] ?? '');
 $mensaje  = $_GET['msg'] ?? '';
-$esAdmin  = Auth::esAdministrador();
+
+// Personal (admin, medico, enfermeria) puede cargar y editar. Solo el admin borra.
+$puedeEditar = Auth::esPersonal();
+$puedeBorrar = Auth::esAdministrador();
 
 $errorBD = '';
 $documentos = [];
@@ -50,7 +53,7 @@ require __DIR__ . '/layout_inicio.php';
             <div class="card shadow-sm">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Documentos cargados</h5>
-                    <?php if ($esAdmin): ?>
+                    <?php if ($puedeEditar): ?>
                         <a href="documento_form.php" class="btn btn-success btn-sm">
                             <i class="bi bi-plus-lg"></i> Nuevo documento
                         </a>
@@ -61,20 +64,22 @@ require __DIR__ . '/layout_inicio.php';
                         <thead class="table-light">
                             <tr>
                                 <th>Título</th>
+                                <th>Servicio</th>
                                 <th>Archivo</th>
                                 <th>Fecha de carga</th>
                                 <th>Cargado por</th>
                                 <th>QR</th>
-                                <?php if ($esAdmin): ?><th>Acciones</th><?php endif; ?>
+                                <?php if ($puedeEditar): ?><th>Acciones</th><?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
                         <?php if (count($documentos) === 0): ?>
-                            <tr><td colspan="6" class="text-center text-muted py-4">No hay documentos para mostrar.</td></tr>
+                            <tr><td colspan="7" class="text-center text-muted py-4">No hay documentos para mostrar.</td></tr>
                         <?php endif; ?>
                         <?php foreach ($documentos as $doc): ?>
                             <tr>
                                 <td><?= e($doc['titulo']) ?></td>
+                                <td><?= e($doc['servicio']) ?></td>
                                 <td><a href="<?= e($doc['archivo_url']) ?>" target="_blank" rel="noopener">Ver archivo</a></td>
                                 <td><?= e($doc['fecha_carga']) ?></td>
                                 <td><?= e($doc['admin_nombre']) ?></td>
@@ -88,11 +93,12 @@ require __DIR__ . '/layout_inicio.php';
                                         <span class="text-muted">-</span>
                                     <?php endif; ?>
                                 </td>
-                                <?php if ($esAdmin): ?>
+                                <?php if ($puedeEditar): ?>
                                 <td>
                                     <a href="documento_form.php?id=<?= (int) $doc['id_documento'] ?>" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil"></i>
                                     </a>
+                                    <?php if ($puedeBorrar): ?>
                                     <form method="post" action="documento_eliminar.php" class="d-inline"
                                           onsubmit="return confirm('¿Eliminar este documento? Esta acción no se puede deshacer.');">
                                         <input type="hidden" name="id" value="<?= (int) $doc['id_documento'] ?>">
@@ -100,6 +106,7 @@ require __DIR__ . '/layout_inicio.php';
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
+                                    <?php endif; ?>
                                 </td>
                                 <?php endif; ?>
                             </tr>

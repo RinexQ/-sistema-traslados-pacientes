@@ -3,7 +3,8 @@ require_once __DIR__ . '/../negocio/Auth.php';
 require_once __DIR__ . '/../negocio/Documento.php';
 require_once __DIR__ . '/../datos/DocumentoDAO.php';
 
-Auth::exigirAdministrador();
+// Pueden entrar administrador, medico y enfermeria
+Auth::exigirPersonal();
 $usuario = Auth::usuarioActual();
 $dao = new DocumentoDAO();
 
@@ -12,8 +13,10 @@ $esEdicion = $id !== null;
 
 $titulo = '';
 $archivoUrl = '';
+$idServicio = 0;
 $errores = [];
 
+// Si es edicion, cargamos los datos que ya tiene el documento
 if ($esEdicion) {
     $existente = $dao->obtenerPorId($id);
     if ($existente === null) {
@@ -22,22 +25,24 @@ if ($esEdicion) {
     }
     $titulo = $existente['titulo'];
     $archivoUrl = $existente['archivo_url'];
+    $idServicio = (int) $existente['id_servicio'];
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'] ?? '';
     $archivoUrl = $_POST['archivo_url'] ?? '';
+    $idServicio = (int) ($_POST['id_servicio'] ?? 0);
 
-    $documento = new Documento($id, $titulo, $archivoUrl);
+    $documento = new Documento($id, $titulo, $archivoUrl, null, null, $idServicio);
     $errores = $documento->validar();
 
     if (count($errores) === 0) {
         try {
             if ($esEdicion) {
-                $dao->actualizar($id, $documento->titulo, $documento->archivoUrl);
+                $dao->actualizar($id, $documento->titulo, $documento->archivoUrl, $idServicio);
                 header('Location: documentos_listar.php?msg=editado');
             } else {
-                $dao->crear($documento->titulo, $documento->archivoUrl, (int) $usuario['identificador']);
+                $dao->crear($documento->titulo, $documento->archivoUrl, (int) $usuario['identificador'], $idServicio);
                 header('Location: documentos_listar.php?msg=creado');
             }
             exit;
@@ -46,9 +51,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Si hubo errores, el formulario conserva lo que se escribio
     $titulo = $documento->titulo;
     $archivoUrl = $documento->archivoUrl;
 }
+
+$servicios = $dao->listarServicios();
 
 $tituloPagina = $esEdicion ? 'Editar documento' : 'Nuevo documento';
 $paginaActiva = 'documentos';
@@ -77,6 +85,19 @@ require __DIR__ . '/layout_inicio.php';
                             <label class="form-label" for="titulo">Título</label>
                             <input type="text" id="titulo" name="titulo" class="form-control" maxlength="200"
                                    value="<?= e($titulo) ?>" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="id_servicio">Servicio</label>
+                            <select id="id_servicio" name="id_servicio" class="form-select" required>
+                                <option value="">-- Elegí un servicio --</option>
+                                <?php foreach ($servicios as $serv): ?>
+                                    <option value="<?= (int) $serv['id_servicio'] ?>"
+                                        <?= (int) $serv['id_servicio'] === $idServicio ? 'selected' : '' ?>>
+                                        <?= e($serv['nombre']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="mb-3">

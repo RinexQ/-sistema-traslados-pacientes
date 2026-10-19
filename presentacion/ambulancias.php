@@ -69,7 +69,7 @@ require __DIR__ . '/layout_inicio.php';
                                 <td><?= e($t['hora_llegada'] ?? '-') ?></td>
                                 <td>
                                     <span class="badge <?= e($coloresEstado[$t['estado']] ?? 'bg-secondary') ?>">
-                                        <?= e(str_replace('_', ' ', $t['estado'])) ?>
+                                        <?= e(ucfirst(str_replace('_', ' ', $t['estado']))) ?>
                                     </span>
                                 </td>
                             </tr>

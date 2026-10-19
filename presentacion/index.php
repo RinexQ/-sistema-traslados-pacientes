@@ -109,7 +109,7 @@ require __DIR__ . '/layout_inicio.php';
                                         <td><?= e($t['origen']) ?> → <?= e($t['destino']) ?></td>
                                         <td>
                                             <span class="badge <?= e($coloresEstado[$t['estado']] ?? 'bg-secondary') ?>">
-                                                <?= e(str_replace('_', ' ', $t['estado'])) ?>
+                                                <?= e(ucfirst(str_replace('_', ' ', $t['estado']))) ?>
                                             </span>
                                         </td>
                                         <td><?= e(date('d/m/Y H:i', strtotime($t['fecha_salida']))) ?></td>

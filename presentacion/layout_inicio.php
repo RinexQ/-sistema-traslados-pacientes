@@ -9,18 +9,35 @@ if (!function_exists('e')) {
 }
 
 $usuarioLayout = Auth::usuarioActual();
+
+$nombresRol = [
+    'administrador' => 'Administrador',
+    'medico'        => 'Médico',
+    'enfermeria'    => 'Enfermería',
+    'paciente'      => 'Paciente',
+];
+
 $esAdminLayout = Auth::esAdministrador();
 
+$esPersonalLayout = Auth::esPersonal();
+
+// El menu cambia segun el rol del usuario
 $menu = [];
 if ($esAdminLayout) {
     $menu[] = ['index', 'index.php', 'bi-speedometer2', 'Dashboard'];
+}
+if ($esPersonalLayout) {
+    $menu[] = ['solicitudes', 'solicitudes.php', 'bi-card-checklist', 'Solicitudes'];
+}
+if ($esAdminLayout) {
     $menu[] = ['ambulancias', 'ambulancias.php', 'bi-truck', 'Ambulancias'];
 }
 $menu[] = ['documentos', 'documentos_listar.php', 'bi-file-earmark-text', 'Documentación'];
 if ($esAdminLayout) {
     $menu[] = ['usuarios', 'usuarios.php', 'bi-person-badge', 'Usuarios'];
 }
-$menu[] = ['salir', '../logout.php', 'bi-box-arrow-right', 'Cerrar sesión'];
+// ?salir=1 cierra la sesion (lo atiende Auth::exigirSesion en cada pagina)
+$menu[] = ['salir', '?salir=1', 'bi-box-arrow-right', 'Cerrar sesión'];
 
 $busquedaActual = $_GET['q'] ?? '';
 ?>
@@ -32,9 +49,8 @@ $busquedaActual = $_GET['q'] ?? '';
     <title><?= e($tituloPagina) ?> - <?= e(NOMBRE_SISTEMA) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/estilos.css">
 </head>
-
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -81,7 +97,7 @@ $busquedaActual = $_GET['q'] ?? '';
                         </div>
                         <div class="col-12 col-md-6 text-center text-md-end">
                             <span class="me-3 d-none d-md-inline text-muted">
-                                <?= e($usuarioLayout['nombre'] ?? '') ?>
+                                <?= e($usuarioLayout['nombre'] ?? '') ?> (<?= e($nombresRol[$usuarioLayout['rol']] ?? '') ?>)
                             </span>
                             <i class="bi bi-person-circle fs-2"></i>
                         </div>

@@ -1,13 +1,13 @@
 
 
 body{
-    background-color:#f4f6f9;
+    background-color:#eef2f6;
     font-family:Arial, Helvetica, sans-serif;
     overflow-x:hidden;
 }
 
 main{
-    background-color:#f4f6f9;
+    background-color:#eef2f6;
     min-height:100vh;
 }
 
@@ -15,7 +15,7 @@ main{
 
 
 aside{
-    background:#0d6efd;
+    background:#0f766e;
 }
 
 aside h3{
@@ -40,7 +40,7 @@ aside .nav-link:hover{
 
 aside .nav-link.active{
     background:white;
-    color:#0d6efd !important;
+    color:#0f766e !important;
 }
 
 
@@ -55,7 +55,7 @@ aside .nav-link.active{
 
 .form-control:focus{
     box-shadow:none;
-    border-color:#0d6efd;
+    border-color:#0f766e;
 }
 
 
@@ -283,4 +283,40 @@ h5{
 
 .btn-outline-secondary i{
     font-size:1rem;
+}
+
+
+.bg-primary{
+    background-color:#0f766e !important;
+}
+
+.btn-primary{
+    background-color:#0f766e;
+    border-color:#0f766e;
+}
+
+.btn-primary:hover,
+.btn-primary:focus{
+    background-color:#115e59;
+    border-color:#115e59;
+}
+
+.form-control:focus,
+.form-select:focus{
+    border-color:#0f766e;
+    box-shadow:0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.alert-primary{
+    background-color:#ccfbf1;
+    color:#134e4a;
+}
+
+.accordion-button:not(.collapsed){
+    background-color:#ccfbf1;
+    color:#134e4a;
+}
+
+.accordion-button:focus{
+    box-shadow:0 0 0 3px rgba(15, 118, 110, 0.12);
 }
