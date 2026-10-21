@@ -32,7 +32,7 @@ class DocumentoDAO {
     // Lista para el portal publico, ordenada por servicio
     public function listarParaPortal(?string $busqueda = null): array {
         $pdo = Conexion::obtener();
-        $sql = 'SELECT s.nombre AS servicio, d.titulo, d.archivo_url, d.fecha_carga
+        $sql = 'SELECT d.id_documento, s.nombre AS servicio, d.titulo, d.archivo_url, d.fecha_carga
                 FROM documento d
                 JOIN servicio s ON s.id_servicio = d.id_servicio';
         $params = [];
@@ -90,19 +90,46 @@ class DocumentoDAO {
         }
     }
 
+    // Devuelve el codigo QR actual de un documento (o null si no tiene)
+    public function obtenerQr(int $idDocumento): ?string {
+        $pdo = Conexion::obtener();
+        $stmt = $pdo->prepare('SELECT codigo FROM codigo_qr WHERE id_documento = :id ORDER BY id_qr DESC LIMIT 1');
+        $stmt->execute([':id' => $idDocumento]);
+        $codigo = $stmt->fetchColumn();
+        return $codigo === false ? null : (string) $codigo;
+    }
+
+    // Al editar un documento se genera un QR nuevo y el anterior deja de funcionar
     public function actualizar(int $id, string $titulo, string $archivoUrl, int $idServicio): bool {
         $pdo = Conexion::obtener();
-        $stmt = $pdo->prepare(
-            'UPDATE documento
-             SET titulo = :titulo, archivo_url = :archivo_url, id_servicio = :id_servicio
-             WHERE id_documento = :id'
-        );
-        return $stmt->execute([
-            ':titulo'      => $titulo,
-            ':archivo_url' => $archivoUrl,
-            ':id_servicio' => $idServicio,
-            ':id'          => $id,
-        ]);
+        $pdo->beginTransaction();
+        try {
+            $stmt = $pdo->prepare(
+                'UPDATE documento
+                 SET titulo = :titulo, archivo_url = :archivo_url, id_servicio = :id_servicio
+                 WHERE id_documento = :id'
+            );
+            $stmt->execute([
+                ':titulo'      => $titulo,
+                ':archivo_url' => $archivoUrl,
+                ':id_servicio' => $idServicio,
+                ':id'          => $id,
+            ]);
+
+            $borrar = $pdo->prepare('DELETE FROM codigo_qr WHERE id_documento = :id');
+            $borrar->execute([':id' => $id]);
+
+            $codigo = 'QR-DOC-' . str_pad((string) $id, 3, '0', STR_PAD_LEFT)
+                    . '-' . substr(md5(uniqid('', true)), 0, 6);
+            $nuevo = $pdo->prepare('INSERT INTO codigo_qr (codigo, id_documento) VALUES (:codigo, :id)');
+            $nuevo->execute([':codigo' => $codigo, ':id' => $id]);
+
+            $pdo->commit();
+            return true;
+        } catch (Throwable $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
     }
 
     // Borra primero el QR (por la clave foranea) y despues el documento

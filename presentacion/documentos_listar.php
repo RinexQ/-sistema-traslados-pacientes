@@ -7,9 +7,9 @@ Auth::exigirSesion();
 $busqueda = trim($_GET['q'] ?? '');
 $mensaje  = $_GET['msg'] ?? '';
 
-// Personal (admin, medico, enfermeria) puede cargar y editar. Solo el admin borra.
+// El personal (administrador, medico y enfermeria) puede cargar, editar y borrar
 $puedeEditar = Auth::esPersonal();
-$puedeBorrar = Auth::esAdministrador();
+$puedeBorrar = Auth::esPersonal();
 
 $errorBD = '';
 $documentos = [];
@@ -80,13 +80,16 @@ require __DIR__ . '/layout_inicio.php';
                             <tr>
                                 <td><?= e($doc['titulo']) ?></td>
                                 <td><?= e($doc['servicio']) ?></td>
-                                <td><a href="<?= e($doc['archivo_url']) ?>" target="_blank" rel="noopener">Ver archivo</a></td>
+                                <td>
+                                    <a href="<?= e($doc['archivo_url']) ?>" target="_blank" rel="noopener">Ver</a> |
+                                    <a href="<?= e(Auth::url('descargar.php')) ?>?id=<?= (int) $doc['id_documento'] ?>">Descargar</a>
+                                </td>
                                 <td><?= e($doc['fecha_carga']) ?></td>
                                 <td><?= e($doc['admin_nombre']) ?></td>
                                 <td>
                                     <?php if (!empty($doc['codigo_qr'])): ?>
-                                        <a href="<?= e(Auth::url('ver_documento.php')) ?>?codigo=<?= urlencode($doc['codigo_qr']) ?>"
-                                           target="_blank" class="btn btn-outline-secondary btn-sm">
+                                        <a href="documento_qr.php?id=<?= (int) $doc['id_documento'] ?>"
+                                           class="btn btn-outline-secondary btn-sm">
                                             <i class="bi bi-qr-code"></i>
                                         </a>
                                     <?php else: ?>

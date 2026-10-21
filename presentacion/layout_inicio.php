@@ -10,13 +10,13 @@ if (!function_exists('e')) {
 
 $usuarioLayout = Auth::usuarioActual();
 
+// Nombres para mostrar de cada rol (en la base se guardan en minuscula)
 $nombresRol = [
     'administrador' => 'Administrador',
     'medico'        => 'Médico',
     'enfermeria'    => 'Enfermería',
     'paciente'      => 'Paciente',
 ];
-
 $esAdminLayout = Auth::esAdministrador();
 
 $esPersonalLayout = Auth::esPersonal();
@@ -33,6 +33,9 @@ if ($esAdminLayout) {
     $menu[] = ['ambulancias', 'ambulancias.php', 'bi-truck', 'Ambulancias'];
 }
 $menu[] = ['documentos', 'documentos_listar.php', 'bi-file-earmark-text', 'Documentación'];
+if ($esPersonalLayout) {
+    $menu[] = ['encuestas', 'encuestas_reporte.php', 'bi-bar-chart', 'Encuestas'];
+}
 if ($esAdminLayout) {
     $menu[] = ['usuarios', 'usuarios.php', 'bi-person-badge', 'Usuarios'];
 }
@@ -97,7 +100,7 @@ $busquedaActual = $_GET['q'] ?? '';
                         </div>
                         <div class="col-12 col-md-6 text-center text-md-end">
                             <span class="me-3 d-none d-md-inline text-muted">
-                                <?= e($usuarioLayout['nombre'] ?? '') ?> (<?= e($nombresRol[$usuarioLayout['rol']] ?? '') ?>)
+                                <?= e($usuarioLayout['nombre'] ?? '') ?> (<?= e($nombresRol[$usuarioLayout['rol'] ?? ''] ?? '') ?>)
                             </span>
                             <i class="bi bi-person-circle fs-2"></i>
                         </div>

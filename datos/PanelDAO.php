@@ -54,7 +54,7 @@ class PanelDAO {
 
     public function listarVehiculos(): array {
         return Conexion::obtener()
-            ->query('SELECT id_vehiculo, patente, tipo, requiere_enfermero FROM vehiculo ORDER BY id_vehiculo')
+            ->query('SELECT id_vehiculo, patente, tipo, requiere_enfermero, estado FROM vehiculo ORDER BY id_vehiculo')
             ->fetchAll();
     }
 

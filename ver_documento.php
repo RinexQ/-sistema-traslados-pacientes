@@ -10,7 +10,7 @@ $documento = null;
 if ($codigo !== '') {
     $pdo = Conexion::obtener();
     $stmt = $pdo->prepare(
-        'SELECT d.titulo, d.archivo_url, d.fecha_carga
+        'SELECT d.id_documento, d.titulo, d.archivo_url, d.fecha_carga
          FROM codigo_qr q
          JOIN documento d ON d.id_documento = q.id_documento
          WHERE q.codigo = :codigo'
@@ -31,7 +31,7 @@ if ($codigo !== '') {
     <div class="container py-5" style="max-width: 500px;">
         <?php if ($documento === null): ?>
             <div class="alert alert-warning">
-                Código inválido o el documento ya no está disponible.
+                Este código QR ya no es válido o el documento ya no está disponible. Pedí el código actualizado en el hospital.
             </div>
         <?php else: ?>
             <div class="card shadow-sm">
@@ -40,6 +40,9 @@ if ($codigo !== '') {
                     <p class="text-muted">Cargado el <?= htmlspecialchars($documento['fecha_carga']) ?></p>
                     <a href="<?= htmlspecialchars($documento['archivo_url']) ?>" target="_blank" class="btn btn-primary">
                         Abrir archivo
+                    </a>
+                    <a href="descargar.php?id=<?= (int) $documento['id_documento'] ?>" class="btn btn-outline-secondary">
+                        Descargar
                     </a>
                 </div>
             </div>

@@ -2,6 +2,7 @@
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/negocio/Auth.php';
 require_once __DIR__ . '/negocio/Usuario.php';
+require_once __DIR__ . '/negocio/Captcha.php';
 
 Auth::iniciar();
 
@@ -14,16 +15,18 @@ if (Auth::haySesion()) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email    = trim($_POST['email'] ?? '');
+    $cedula   = trim($_POST['cedula'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if ($email === '' || $password === '') {
-        $error = 'Completá email y contraseña.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = 'El email no tiene un formato válido.';
+    if ($cedula === '' || $password === '') {
+        $error = 'Completá cédula y contraseña.';
+    } elseif (!preg_match('/^\d{7,8}$/', $cedula)) {
+        $error = 'La cédula debe tener 7 u 8 dígitos, sin puntos ni guión.';
+    } elseif (!Captcha::verificar($_POST['captcha'] ?? '')) {
+        $error = 'La respuesta de verificación es incorrecta.';
     } else {
         try {
-            $usuario = Usuario::autenticar($email, $password);
+            $usuario = Usuario::autenticar($cedula, $password);
         } catch (PDOException $ex) {
             $usuario = null;
             $error = 'No se pudo consultar la base de datos.';
@@ -34,10 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
         if ($error === '') {
-            $error = 'Email o contraseña incorrectos.';
+            $error = 'Cédula o contraseña incorrectos.';
         }
     }
 }
+
+// Pregunta nueva cada vez que se muestra el formulario
+$pregunta = Captcha::nueva();
 
 function esc($t) { return htmlspecialchars((string) $t, ENT_QUOTES, 'UTF-8'); }
 ?>
@@ -77,14 +83,20 @@ function esc($t) { return htmlspecialchars((string) $t, ENT_QUOTES, 'UTF-8'); }
 
                 <form method="post" id="form-login" novalidate>
                     <div class="campo">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required
-                               value="<?= esc($_POST['email'] ?? '') ?>">
+                        <label for="cedula">Cédula</label>
+                        <input type="text" id="cedula" name="cedula" maxlength="8" inputmode="numeric" required
+                               value="<?= esc($_POST['cedula'] ?? '') ?>">
+                        <span class="pista">Sin puntos ni guión.</span>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="campo">
                         <label for="password">Contraseña</label>
                         <input type="password" id="password" name="password" required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="campo">
+                        <label for="captcha"><?= esc($pregunta) ?></label>
+                        <input type="text" id="captcha" name="captcha" maxlength="3" inputmode="numeric" required autocomplete="off">
                         <div class="invalid-feedback"></div>
                     </div>
                     <button type="submit">Ingresar</button>

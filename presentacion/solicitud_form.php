@@ -10,7 +10,7 @@ $usuario = Auth::usuarioActual();
 
 $errores = [];
 $datos = [
-    'tipo' => 'paciente', 'ci_paciente' => '', 'origen' => 'Hospital de Clínicas', 'destino' => '',
+    'tipo' => 'paciente', 'prioridad' => 'sin_prioridad', 'ci_paciente' => '', 'origen' => 'Hospital de Clínicas', 'destino' => '',
     'domicilio' => '', 'telefono' => '', 'diagnostico' => '', 'motivo' => '',
     'aislamiento_detalle' => '', 'rodado' => 'ninguno',
 ];
@@ -66,13 +66,32 @@ require __DIR__ . '/layout_inicio.php';
                 <div class="card-body d-block">
                     <form method="post" id="form-solicitud" novalidate>
 
-                        <div class="mb-3">
-                            <label class="form-label" for="tipo">Qué se traslada</label>
-                            <select id="tipo" name="tipo" class="form-select">
-                                <option value="paciente" <?= $datos['tipo'] === 'paciente' ? 'selected' : '' ?>>Paciente</option>
-                                <option value="biologico" <?= $datos['tipo'] === 'biologico' ? 'selected' : '' ?>>Material biológico</option>
-                                <option value="no_biologico" <?= $datos['tipo'] === 'no_biologico' ? 'selected' : '' ?>>Material no biológico</option>
-                            </select>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="tipo">Qué se traslada</label>
+                                <select id="tipo" name="tipo" class="form-select">
+                                    <?php foreach (Solicitud::GRUPOS as $grupo => $claves): ?>
+                                        <optgroup label="<?= e($grupo) ?>">
+                                            <?php foreach ($claves as $clave): ?>
+                                                <option value="<?= e($clave) ?>" <?= $datos['tipo'] === $clave ? 'selected' : '' ?>>
+                                                    <?= e(Solicitud::TIPOS[$clave]) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </optgroup>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="prioridad">Prioridad</label>
+                                <select id="prioridad" name="prioridad" class="form-select">
+                                    <?php foreach (Solicitud::PRIORIDADES as $clave => $nombre): ?>
+                                        <option value="<?= e($clave) ?>" <?= $datos['prioridad'] === $clave ? 'selected' : '' ?>>
+                                            <?= e($nombre) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div class="form-text">Los traslados de órganos siempre tienen prioridad de órganos.</div>
+                            </div>
                         </div>
 
                         <div class="row">

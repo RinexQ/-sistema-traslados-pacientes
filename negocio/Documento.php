@@ -36,6 +36,10 @@ class Documento {
             $errores[] = 'La URL del archivo es demasiado larga.';
         } elseif (!preg_match('#^(https?://|documentos/)\S+$#i', $this->archivoUrl)) {
             $errores[] = 'La ruta debe comenzar con http://, https:// o documentos/ y no tener espacios.';
+        } elseif (strpos($this->archivoUrl, '..') !== false) {
+            $errores[] = 'La ruta del archivo no es valida.';
+        } elseif (!preg_match('#\.(pdf|jpe?g)$#i', $this->archivoUrl)) {
+            $errores[] = 'El archivo tiene que ser un PDF o una imagen JPG.';
         }
 
         if ($this->idServicio === null || $this->idServicio <= 0) {

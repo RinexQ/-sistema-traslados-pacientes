@@ -68,6 +68,12 @@ require __DIR__ . '/layout_inicio.php';
                 <h2><?= $esEdicion ? 'Editar documento' : 'Nuevo documento' ?></h2>
             </div>
 
+            <?php if ($esEdicion): ?>
+                <div class="alert alert-warning">
+                    Al guardar los cambios se genera un código QR nuevo y el anterior deja de funcionar.
+                </div>
+            <?php endif; ?>
+
             <?php if (count($errores) > 0): ?>
                 <div class="alert alert-danger">
                     <ul class="mb-0">
@@ -104,7 +110,7 @@ require __DIR__ . '/layout_inicio.php';
                             <label class="form-label" for="archivo_url">URL / ruta del archivo</label>
                             <input type="text" id="archivo_url" name="archivo_url" class="form-control" maxlength="500"
                                    value="<?= e($archivoUrl) ?>" required>
-                            <div class="form-text">Ejemplo: https://ejemplo.com/doc.pdf o documentos/indicacion_001.pdf</div>
+                            <div class="form-text">Formatos permitidos: PDF o imagen JPG. Ejemplo: https://ejemplo.com/doc.pdf o documentos/indicacion_001.pdf</div>
                             <div class="invalid-feedback"></div>
                         </div>
                         <button type="submit" class="btn btn-primary">

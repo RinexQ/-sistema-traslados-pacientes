@@ -4,6 +4,7 @@ require_once __DIR__ . '/../datos/PanelDAO.php';
 
 Auth::exigirAdministrador();
 
+$mensaje = $_GET['msg'] ?? '';
 $dao = new PanelDAO();
 $vehiculos = $dao->listarVehiculos();
 $traslados = $dao->listarTraslados();
@@ -22,15 +23,23 @@ require __DIR__ . '/layout_inicio.php';
 
             <div class="mt-4">
                 <h2>Ambulancias</h2>
-                <p class="text-muted">Vehículos disponibles y traslados registrados.</p>
+                <p class="text-muted">
+                    Vehículos disponibles y traslados registrados. Un vehículo roto no se puede asignar a un traslado.
+                </p>
             </div>
+
+            <?php if ($mensaje === 'vehiculo'): ?>
+                <div class="alert alert-success">El estado del vehículo se actualizó.</div>
+            <?php elseif ($mensaje === 'error'): ?>
+                <div class="alert alert-danger">No se pudo completar la operación.</div>
+            <?php endif; ?>
 
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white"><h5 class="mb-0">Vehículos</h5></div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
-                            <tr><th>Patente</th><th>Tipo</th><th>Requiere enfermero</th></tr>
+                            <tr><th>Patente</th><th>Tipo</th><th>Requiere enfermero</th><th>Estado</th><th>Acciones</th></tr>
                         </thead>
                         <tbody>
                         <?php foreach ($vehiculos as $v): ?>
@@ -38,6 +47,25 @@ require __DIR__ . '/layout_inicio.php';
                                 <td><?= e($v['patente']) ?></td>
                                 <td><?= e($v['tipo']) ?></td>
                                 <td><?= $v['requiere_enfermero'] ? 'Sí' : 'No' ?></td>
+                                <td>
+                                    <span class="badge <?= $v['estado'] === 'roto' ? 'bg-danger' : 'bg-success' ?>">
+                                        <?= e(ucfirst($v['estado'])) ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <form method="post" action="vehiculo_estado.php" class="d-inline">
+                                        <input type="hidden" name="id" value="<?= (int) $v['id_vehiculo'] ?>">
+                                        <?php if ($v['estado'] === 'roto'): ?>
+                                            <button type="submit" name="estado" value="disponible" class="btn btn-success btn-sm">
+                                                Marcar disponible
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="submit" name="estado" value="roto" class="btn btn-danger btn-sm">
+                                                Marcar roto
+                                            </button>
+                                        <?php endif; ?>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>

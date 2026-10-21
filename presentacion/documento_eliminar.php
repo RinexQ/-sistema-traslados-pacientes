@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../negocio/Auth.php';
 require_once __DIR__ . '/../datos/DocumentoDAO.php';
 
-Auth::exigirAdministrador();
+Auth::exigirPersonal();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: documentos_listar.php');

@@ -1,10 +1,35 @@
 <?php
 // Capa de NEGOCIO
-// Representa una solicitud de traslado (pacientes, material biologico o no biologico).
+// Representa una solicitud de traslado. Los tipos y prioridades salen
+// de lo que respondieron los administradores del hospital.
 
 class Solicitud {
 
+    public const TIPOS = [
+        'paciente'          => 'Paciente',
+        'organo'            => 'Órgano',
+        'muestra_biologica' => 'Muestra biológica',
+        'cadeteria'         => 'Cadetería de trámites',
+        'materiales'        => 'Materiales (insumos y equipamiento)',
+    ];
+
+    // Para mostrar los tipos agrupados en el formulario
+    public const GRUPOS = [
+        'Biológico'    => ['paciente', 'organo', 'muestra_biologica'],
+        'No biológico' => ['cadeteria', 'materiales'],
+    ];
+
+    public const PRIORIDADES = [
+        'sin_prioridad'      => 'Sin prioridad',
+        'organos'            => 'Traslado de órganos',
+        'dialisis'           => 'Diálisis',
+        'tratamiento'        => 'Tratamiento de pacientes',
+        'alta_domicilio'     => 'Alta a domicilio',
+        'horario_especifico' => 'Horario específico',
+    ];
+
     public string $tipo;
+    public string $prioridad;
     public ?string $ciPaciente;
     public string $origen;
     public string $destino;
@@ -21,6 +46,7 @@ class Solicitud {
     // Recibe el array $_POST del formulario
     public function __construct(array $datos) {
         $this->tipo       = $datos['tipo'] ?? 'paciente';
+        $this->prioridad  = $datos['prioridad'] ?? 'sin_prioridad';
         $ci               = trim($datos['ci_paciente'] ?? '');
         $this->ciPaciente = $ci === '' ? null : $ci;
         $this->origen     = trim($datos['origen'] ?? '');
@@ -34,6 +60,11 @@ class Solicitud {
         $this->rodado     = $datos['rodado'] ?? 'ninguno';
         $this->oxigeno    = isset($datos['oxigeno']);
         $this->verificado = isset($datos['verificado']);
+
+        // Un traslado de organos siempre tiene la prioridad de organos
+        if ($this->tipo === 'organo') {
+            $this->prioridad = 'organos';
+        }
 
         // Si no es un traslado de paciente, estos datos no se usan
         if ($this->tipo !== 'paciente') {
@@ -52,8 +83,12 @@ class Solicitud {
     public function validar(): array {
         $errores = [];
 
-        if (!in_array($this->tipo, ['paciente', 'biologico', 'no_biologico'])) {
+        if (!array_key_exists($this->tipo, self::TIPOS)) {
             $errores[] = 'El tipo de traslado no es valido.';
+        }
+
+        if (!array_key_exists($this->prioridad, self::PRIORIDADES)) {
+            $errores[] = 'La prioridad elegida no es valida.';
         }
 
         if ($this->origen === '') {

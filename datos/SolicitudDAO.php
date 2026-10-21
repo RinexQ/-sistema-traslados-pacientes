@@ -10,10 +10,11 @@ class SolicitudDAO {
     // Lista las solicitudes. Si se pasa un id, solo las de ese usuario.
     public function listar(?int $idSolicitante = null): array {
         $pdo = Conexion::obtener();
-        $sql = 'SELECT s.id_solicitud, s.fecha, s.tipo, s.origen, s.destino, s.estado,
+        $sql = 'SELECT s.id_solicitud, s.fecha, s.tipo, s.prioridad, s.origen, s.destino, s.estado,
                        s.domicilio, s.telefono, s.diagnostico, s.motivo,
                        s.aislamiento, s.aislamiento_detalle, s.rodado, s.oxigeno, s.verificado,
-                       p.nombre AS paciente, a.nombre AS solicitante
+                       p.nombre AS paciente, a.nombre AS solicitante,
+                       (SELECT COUNT(*) FROM traslado t WHERE t.id_solicitud = s.id_solicitud) AS traslados
                 FROM solicitud_traslado s
                 JOIN administrativo a ON a.id_admin = s.id_admin_solicitante
                 LEFT JOIN paciente p ON p.ci = s.ci_paciente';
@@ -22,7 +23,10 @@ class SolicitudDAO {
             $sql .= ' WHERE s.id_admin_solicitante = :id';
             $params[':id'] = $idSolicitante;
         }
-        $sql .= ' ORDER BY s.fecha DESC, s.id_solicitud DESC';
+        // Primero las pendientes, despues por prioridad y por ultimo las mas nuevas
+        $sql .= " ORDER BY (s.estado = 'pendiente') DESC,
+                  FIELD(s.prioridad, 'organos', 'dialisis', 'tratamiento', 'alta_domicilio', 'horario_especifico', 'sin_prioridad'),
+                  s.fecha DESC, s.id_solicitud DESC";
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
@@ -33,14 +37,15 @@ class SolicitudDAO {
         $pdo = Conexion::obtener();
         $stmt = $pdo->prepare(
             'INSERT INTO solicitud_traslado
-                (fecha, tipo, ci_paciente, origen, destino, domicilio, telefono, diagnostico, motivo,
+                (fecha, tipo, prioridad, ci_paciente, origen, destino, domicilio, telefono, diagnostico, motivo,
                  aislamiento, aislamiento_detalle, rodado, oxigeno, verificado, estado, id_admin_solicitante)
              VALUES
-                (NOW(), :tipo, :ci, :origen, :destino, :domicilio, :telefono, :diagnostico, :motivo,
+                (NOW(), :tipo, :prioridad, :ci, :origen, :destino, :domicilio, :telefono, :diagnostico, :motivo,
                  :aislamiento, :detalle, :rodado, :oxigeno, :verificado, :estado, :solicitante)'
         );
         $stmt->execute([
             ':tipo'        => $s->tipo,
+            ':prioridad'   => $s->prioridad,
             ':ci'          => $s->ciPaciente,
             ':origen'      => $s->origen,
             ':destino'     => $s->destino,

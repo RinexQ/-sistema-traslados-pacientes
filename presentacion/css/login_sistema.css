@@ -183,3 +183,10 @@ body {
         padding: 24px;
     }
 }
+
+.login-box .pista {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #64748b;
+}

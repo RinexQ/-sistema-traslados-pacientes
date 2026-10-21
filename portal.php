@@ -81,8 +81,12 @@ $abrir = $busqueda !== '';
                                 <?php foreach ($docs as $d): ?>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <span><?= esc($d['titulo']) ?></span>
-                                        <a href="<?= esc($d['archivo_url']) ?>" target="_blank" rel="noopener"
-                                           class="btn btn-primary btn-sm">Abrir</a>
+                                        <span>
+                                            <a href="<?= esc($d['archivo_url']) ?>" target="_blank" rel="noopener"
+                                               class="btn btn-primary btn-sm">Abrir</a>
+                                            <a href="descargar.php?id=<?= (int) $d['id_documento'] ?>"
+                                               class="btn btn-outline-secondary btn-sm">Descargar</a>
+                                        </span>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -90,6 +94,11 @@ $abrir = $busqueda !== '';
                     </div>
                 </div>
             <?php endforeach; ?>
+        </div>
+
+        <div class="alert alert-primary mt-4 mb-0">
+            ¿Te atendiste en el hospital? Contanos cómo fue tu experiencia:
+            <a href="encuesta.php">responder la encuesta de satisfacción</a>.
         </div>
 
         <p class="text-center mt-4">
